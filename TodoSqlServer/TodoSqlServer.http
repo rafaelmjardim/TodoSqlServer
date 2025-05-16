@@ -1,0 +1,6 @@
+@TodoSqlServer_HostAddress = http://localhost:5231
+
+GET {{TodoSqlServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

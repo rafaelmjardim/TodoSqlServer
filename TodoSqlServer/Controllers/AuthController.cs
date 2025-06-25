@@ -16,6 +16,12 @@ namespace TodoSqlServer.Controllers
             _todoListContext = todoListContext;
         }
 
+        [HttpGet("home")]
+        public IResult GetInitial()
+        {
+            return Results.Ok("API is running");
+        }
+
         [Authorize]
         [HttpGet]
         public async Task<IResult> GetUsers()

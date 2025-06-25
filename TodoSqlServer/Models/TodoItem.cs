@@ -10,6 +10,5 @@
         //Chave estrangeira
         public Guid UserId { get; set; }
 
-        public User Users { get; set; }
     }
 }

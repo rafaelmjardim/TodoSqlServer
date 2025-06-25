@@ -8,8 +8,15 @@ using TodoSqlServer.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(builder =>
+{
+    builder.AddPolicy("CorsPolicy",
+        options => options.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
+// Add services to the container.
 builder.Services.AddAuthentication();
 builder.Services.AddDbContext<TodoListContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("TodoListContext")));
 
@@ -66,6 +73,8 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

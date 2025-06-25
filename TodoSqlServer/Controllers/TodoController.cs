@@ -47,5 +47,22 @@ namespace TodoSqlServer.Controllers
 
             return Results.Ok(item);
         }
+
+        [HttpDelete("{id:Guid}")]
+        public async Task<IResult> DeleteItem(Guid id) {
+            Guid userId = Services.TokenService.GetUserToken(User);
+
+            var itemToDelete = _todoListContext.TodoItems.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+
+            if (itemToDelete == null)
+            {
+                return Results.NotFound("Item não encontrado ou não pertence ao usuário atual.");
+            }
+
+            _todoListContext.TodoItems.Remove(await itemToDelete);
+            await _todoListContext.SaveChangesAsync();
+
+            return Results.Ok("Item deletado com sucesso!");
+        }
     }
 }

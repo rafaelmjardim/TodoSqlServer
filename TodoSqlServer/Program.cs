@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TodoSqlServer;
 using TodoSqlServer.Models;
+using TodoSqlServer.Repositories.interfaces;
+using TodoSqlServer.Repositories.logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddDbContext<TodoListContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("TodoListContext")));
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

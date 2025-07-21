@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoSqlServer.DTOs;
 using TodoSqlServer.Models;
+using TodoSqlServer.Services.Logic;
 
 namespace TodoSqlServer.Controllers
 {
-    [Route("api/auth/")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -23,7 +24,7 @@ namespace TodoSqlServer.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("users")]
         public async Task<IResult> GetUsers()
         {
             var data = await _todoListContext.Users.ToListAsync();
@@ -57,7 +58,7 @@ namespace TodoSqlServer.Controllers
                 return Results.NotFound("Usuario invalido");
             }
 
-            var token = Services.TokenService.GenerateToken(user);
+            var token = TokenService.GenerateToken(user);
             return Results.Ok(token);
         }
     }

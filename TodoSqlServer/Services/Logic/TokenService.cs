@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TodoSqlServer.Models;
 
-namespace TodoSqlServer.Services
+namespace TodoSqlServer.Services.Logic
 {
     public static class TokenService
     {
@@ -14,7 +14,7 @@ namespace TodoSqlServer.Services
 
             var tokenConfig = new SecurityTokenDescriptor
             {
-                Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("userId", user.Id.ToString()),
                 }),
@@ -38,7 +38,7 @@ namespace TodoSqlServer.Services
             var userId = principal.FindFirst("userId")?.Value;
             if (userId == null)
             {
-                throw new InvalidOperationException(nameof(principal));
+                throw new UnauthorizedAccessException("Usuario não autenticado.");
             }
 
             return Guid.Parse(userId);

@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using TodoSqlServer.DTOs;
 using TodoSqlServer.Models;
 using TodoSqlServer.Repositories.interfaces;
-using TodoSqlServer.Services.Logic;
 
 namespace TodoSqlServer.Repositories.logic
 {
@@ -22,5 +21,26 @@ namespace TodoSqlServer.Repositories.logic
             return todoItems;
         }
 
+        public async Task<TodoItemDto> PostTodoItem(Guid userId, TodoItemDto todoItemRequest)
+        {
+            var newTodo = new TodoItem
+            {
+                Title = todoItemRequest.Title,
+                Description = todoItemRequest?.Description,
+                UserId = userId
+            };
+
+            await _context.TodoItems.AddAsync(newTodo);
+            return new TodoItemDto
+            {
+                Title = newTodo.Title,
+                Description = newTodo.Description,
+            };
+        }
+
+        public async Task CommitSaveChangesAsync()
+        {
+           await _context.SaveChangesAsync();
+        }
     }
 }

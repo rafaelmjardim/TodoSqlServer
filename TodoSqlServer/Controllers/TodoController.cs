@@ -4,6 +4,7 @@ using TodoSqlServer.Services.Logic;
 using TodoSqlServer.Repositories.interfaces;
 using TodoSqlServer.DTOs;
 using TodoSqlServer.Models;
+using TodoSqlServer.Services.Interfaces;
 
 namespace TodoSqlServer.Controllers
 {
@@ -13,43 +14,44 @@ namespace TodoSqlServer.Controllers
     public class TodoController : ControllerBase
     {
 
-        private readonly ITodoRepository _todoRepository;
+        private readonly ITodoInterface _todoService;
 
-        public TodoController(ITodoRepository taskRepository)
+        public TodoController(ITodoInterface todoService)
         {
-            _todoRepository = taskRepository;
+            _todoService = todoService;
         }
 
         [HttpGet]
         public async Task<IResult> GetTodos()
         {
-            var userId = TokenService.GetUserToken(User);
-            var todoItems = await _todoRepository.GetTodos(userId);
+            var todoItems = await _todoService.GetTodoItem(User);
 
-            if (todoItems == null)
-            {
+            if (todoItems.Count <= 0)
                 return Results.NotFound("Nenhum item encontrado");
-            }
-            
+
             return Results.Ok(todoItems);
         }
 
         [HttpPost]
-        public async Task<IResult> PostTodoList([FromBody] TodoItemDto todoItemResponse)
+        public async Task<IResult> PostTodoList([FromBody] TodoItemDto todoItemRequest)
         {
-            Guid userId = TokenService.GetUserToken(User);
+            var TodoItemDto = await _todoService.PostTodoItem(User, todoItemRequest);
 
-            var response = await _todoRepository.PostTodoItem(userId, todoItemResponse);
 
-            if (response == null)
+            if (TodoItemDto == null)
             {
                 return Results.NotFound("Erro ao cadastrar tarefa");
             }
 
-            await _todoRepository.CommitSaveChangesAsync();
-
-            return Results.Ok(response);
+            return Results.Ok(TodoItemDto);
         }
+
+        //[HttpDelete("{id:Guid}")]
+        //public async Task<IResult> DeleteItem()
+        //{
+        //    var userId = TokenService.GetUserToken(User);
+        //    new_todoRepository.DeleteTodoItem(userId);
+        //}
 
         //[HttpDelete("{id:Guid}")]
         //public async Task<IResult> DeleteItem(Guid id) {

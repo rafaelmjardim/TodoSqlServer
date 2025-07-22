@@ -7,6 +7,8 @@ using TodoSqlServer;
 using TodoSqlServer.Models;
 using TodoSqlServer.Repositories.interfaces;
 using TodoSqlServer.Repositories.logic;
+using TodoSqlServer.Services.Interfaces;
+using TodoSqlServer.Services.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,8 @@ builder.Services.AddDbContext<TodoListContext>(option => option.UseSqlServer(bui
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+builder.Services.AddScoped<ITodoInterface, TodoService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

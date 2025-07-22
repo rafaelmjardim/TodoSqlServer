@@ -2,13 +2,13 @@
 using TodoSqlServer.DTOs;
 using TodoSqlServer.Models;
 using TodoSqlServer.Repositories.interfaces;
+using TodoSqlServer.Services.Interfaces;
 
 namespace TodoSqlServer.Repositories.logic
 {
     public class TodoRepository : ITodoRepository
     {
         private readonly TodoListContext _context;
-
         public TodoRepository(TodoListContext context)
         {
             _context = context;
@@ -18,10 +18,10 @@ namespace TodoSqlServer.Repositories.logic
         {
             var todoItems = await _context.TodoItems.Where(i => i.UserId == userId).ToListAsync();
 
-            return todoItems;
+            return new List<TodoItem>();
         }
 
-        public async Task<TodoItemDto> PostTodoItem(Guid userId, TodoItemDto todoItemRequest)
+        public async Task<TodoItem> PostTodoItem(Guid userId, TodoItemDto todoItemRequest)
         {
             var newTodo = new TodoItem
             {
@@ -31,12 +31,16 @@ namespace TodoSqlServer.Repositories.logic
             };
 
             await _context.TodoItems.AddAsync(newTodo);
-            return new TodoItemDto
-            {
-                Title = newTodo.Title,
-                Description = newTodo.Description,
-            };
+
+            return newTodo;
         }
+
+        //public async Task<TodoItem> DeleteTodoItem(Guid userId, Guid itemId)
+        //{
+        //    var todoItem = await _context.TodoItems.FirstAsync(i => i.UserId == userId && i.Id == itemId);
+
+        //    return todoItem;
+        //}
 
         public async Task CommitSaveChangesAsync()
         {

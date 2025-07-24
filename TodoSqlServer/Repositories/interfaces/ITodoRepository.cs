@@ -9,6 +9,6 @@ namespace TodoSqlServer.Repositories.interfaces
         public Task CommitSaveChangesAsync();
         public Task<List<TodoItem>> GetTodos(Guid userId);
         public Task<TodoItem> PostTodoItem(Guid userId, TodoItemDto todoItemRequest);
-        //public Task<TodoItemDto> DeleteTodoItem(Guid userId, Guid itemId);
+        public Task<bool> DeleteTodoItem(Guid userId, Guid itemId);
     }
 }

@@ -14,6 +14,20 @@ namespace TodoSqlServer.Services.Logic
             _repository = repository;
         }
 
+        public async Task<bool> DeleteTodoItem(ClaimsPrincipal principal, Guid itemId)
+        {
+            var userId = TokenService.GetUserToken(principal);
+            var todoItem = await _repository.DeleteTodoItem(userId, itemId);
+
+            if (todoItem == null)
+            {
+                return false;
+            }
+            
+            await _repository.CommitSaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<TodoItem>> GetTodoItem(ClaimsPrincipal principal)
         {
             var userId = TokenService.GetUserToken(principal);

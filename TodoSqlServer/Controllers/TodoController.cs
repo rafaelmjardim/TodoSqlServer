@@ -46,29 +46,19 @@ namespace TodoSqlServer.Controllers
             return Results.Ok(TodoItemDto);
         }
 
-        //[HttpDelete("{id:Guid}")]
-        //public async Task<IResult> DeleteItem()
-        //{
-        //    var userId = TokenService.GetUserToken(User);
-        //    new_todoRepository.DeleteTodoItem(userId);
-        //}
+        [HttpDelete("{id:Guid}")]
+        public async Task<IResult> DeleteItem(Guid id)
+        {
+            var success = await _todoService.DeleteTodoItem(User, id);
 
-        //[HttpDelete("{id:Guid}")]
-        //public async Task<IResult> DeleteItem(Guid id) {
-        //    Guid userId = TokenService.GetUserToken(User);
+            if (!success)
+            {
+                return Results.NotFound("Erro ao deletar tarefa");
+            }
 
-        //    var itemToDelete = _todoListContext.TodoItems.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+            return Results.Ok("Tarefa deletada com sucesso!");
+        }
 
-        //    if (itemToDelete == null)
-        //    {
-        //        return Results.NotFound("Item não encontrado ou não pertence ao usuário atual.");
-        //    }
-
-        //    _todoListContext.TodoItems.Remove(await itemToDelete);
-        //    await _todoListContext.SaveChangesAsync();
-
-        //    return Results.Ok("Item deletado com sucesso!");
-        //}
         //[HttpPut("{id:Guid}")]
         //public async Task<IResult> UpdateItem(Guid id, TodoItem todoItem) { 
         //    Guid userId = TokenService.GetUserToken(User);

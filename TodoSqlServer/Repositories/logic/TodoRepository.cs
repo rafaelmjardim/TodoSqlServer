@@ -9,6 +9,7 @@ namespace TodoSqlServer.Repositories.logic
     public class TodoRepository : ITodoRepository
     {
         private readonly TodoListContext _context;
+
         public TodoRepository(TodoListContext context)
         {
             _context = context;
@@ -18,7 +19,7 @@ namespace TodoSqlServer.Repositories.logic
         {
             var todoItems = await _context.TodoItems.Where(i => i.UserId == userId).ToListAsync();
 
-            return new List<TodoItem>();
+            return todoItems;
         }
 
         public async Task<TodoItem> PostTodoItem(Guid userId, TodoItemDto todoItemRequest)
@@ -35,12 +36,18 @@ namespace TodoSqlServer.Repositories.logic
             return newTodo;
         }
 
-        //public async Task<TodoItem> DeleteTodoItem(Guid userId, Guid itemId)
-        //{
-        //    var todoItem = await _context.TodoItems.FirstAsync(i => i.UserId == userId && i.Id == itemId);
+        public async Task<bool> DeleteTodoItem(Guid userId, Guid itemId)
+        {
+            var todoItem = await _context.TodoItems.FirstAsync(i => i.UserId == userId && i.Id == itemId);
 
-        //    return todoItem;
-        //}
+            if (todoItem == null) {
+                return false;
+            }
+
+            _context.TodoItems.Remove(todoItem);
+
+            return true;
+        }
 
         public async Task CommitSaveChangesAsync()
         {

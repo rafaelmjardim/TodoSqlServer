@@ -8,6 +8,6 @@ namespace TodoSqlServer.Services.Interfaces
     {
         public Task<List<TodoItem>> GetTodoItem(ClaimsPrincipal principal);
         public Task<TodoItemDto> PostTodoItem(ClaimsPrincipal principal, TodoItemDto todoRequest);
-       
+        public Task<bool> DeleteTodoItem(ClaimsPrincipal principal, Guid itemId);
     }
 }
